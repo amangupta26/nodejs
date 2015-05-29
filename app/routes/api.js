@@ -98,7 +98,7 @@ module.exports = function(app,express){
  	////Chaining allows multiple HTTP method on a single route
  	api.route('/')
  		.post(function(req,res){
- 			var story = new story({
+ 			var story = new Story({
  				creator : req.decoded.id,
  				content : req.body.content,
  			});
@@ -113,7 +113,7 @@ module.exports = function(app,express){
  		})
 
  		.get(function(req,res){
- 			story.find({creator : req.decoded.id},function(err,stories){
+ 			Story.find({creator : req.decoded.id},function(err,stories){
  				if(err){
  					res.send(err);
  					return;
