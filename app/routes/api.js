@@ -7,7 +7,7 @@ var jsonwebtoken = require('jsonwebtoken');
 
 function createToken(user){
 	var token = jsonwebtoken.sign({
-		_id : user._id,
+		id : user._id,
 		name : user.name,
 		username : user.username
 	},secretKey,{
@@ -54,7 +54,7 @@ module.exports = function(app,express){
 			if(!user){
 				res.send({message : "User does not exist"});
 			}else if(user){
-				var validPassword = User.comparePassword(req.body.password);
+				var validPassword = user.comparePassword(req.body.password);
 				if(!validPassword)
 					res.send({message : "Invalid password!"});
 				else{
@@ -75,7 +75,7 @@ module.exports = function(app,express){
 
 	api.use(function(req,res,next){																	//middleware after login i.e. when client gets token. All the request after login has to contain token and will pass this custom  middleware		
 		console.log("somebody came");
-		var token = req.body.token || req.params('token') || req.headers['x-access-token'];
+		var token = req.headers['x-access-token'];
 		if(token){
 			jsonwebtoken.verify(token,secretKey,function(err,decoded){
 				if(err)
@@ -113,7 +113,7 @@ module.exports = function(app,express){
  		})
 
  		.get(function(req,res){
- 			story.find({creator : req.decoded.id)},function(err,stories){
+ 			story.find({creator : req.decoded.id},function(err,stories){
  				if(err){
  					res.send(err);
  					return;
@@ -121,6 +121,7 @@ module.exports = function(app,express){
 
  				res.json(stories);
  			});
+ 		});
 
 
  	api.get('/me',function(req,res){
