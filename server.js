@@ -29,11 +29,13 @@ app.use(bodyParser.urlencoded({extended : true}));    //extended : false means o
 app.use(bodyParser.json());
 app.use(morgan('dev'));
 
+app.use(express.static(__dirname+"/public"));
+
 var api = require('./app/routes/api')(app,express);
 app.use('/api',api);												// /api is the prefix used before each APIs
 
 app.get('*',function(req,res){
-	res.sendFile(__dirname + '/public/views/index.html');
+	res.sendFile(__dirname + '/public/app/views/index.html');
 });
 
 app.listen(config.port,function(err){
